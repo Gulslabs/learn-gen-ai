@@ -3,7 +3,6 @@
 - Make sure you are running ollama locally: 
     - `ollama run llama3`
     - `ollama ps`
-
       ```
           NAME             ID              SIZE      PROCESSOR          UNTIL
           llama3:latest    365c0bd3c000    5.9 GB    14%/86% CPU/GPU    4 minutes from now
@@ -12,10 +11,9 @@
     ```
     MODEL=ollama/llama3
     API_BASE=http://localhost:11434
-
     ```
-  - Finally Run. `crewai run` 
-
+  - Finally Run. `crewai run`
+  
 ## Installation
 - Step 0: CrewAI requires Python >=3.10 and <3.13. Here’s how to check your version:
     `python --version`
@@ -24,7 +22,6 @@
     ```
 - Step 1: UV installation on Windows. 
   `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
-
   ```
   Downloading uv 0.6.13 (x86_64-pc-windows-msvc)
   Installing to C:\Users\gulam\.local\bin
