@@ -1,4 +1,4 @@
-# CrewWithLocalLlm Crew
+# Crew With Local Llm
 ## Execution
 - Make sure you are running ollama locally: 
     - `ollama run llama3`
