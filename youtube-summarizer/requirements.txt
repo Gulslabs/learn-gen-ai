@@ -1,0 +1,9 @@
+# Core functionality
+git+https://github.com/openai/whisper.git
+transformers
+torch
+gradio
+yt-dlp
+
+# Optional, in case whisper dependencies require it
+ffmpeg-python

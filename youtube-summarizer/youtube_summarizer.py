@@ -6,25 +6,42 @@ import whisper
 from transformers import pipeline
 import warnings
 
-# Suppress FP16 warning
+# Suppress FP16 warning on CPU
 warnings.filterwarnings("ignore", category=UserWarning)
 
-def download_audio(youtube_url, output_filename="audio.mp3", ffmpeg_path=None):
+def ensure_output_folder(folder):
+    os.makedirs(folder, exist_ok=True)
+
+def download_audio(youtube_url, output_folder="outputs", output_filename="audio.mp3"):
     print("Using yt-dlp to download audio...")
+    ensure_output_folder(output_folder)
+    output_path = os.path.join(output_folder, output_filename)
+
     command = [
         "yt-dlp",
         "-f", "bestaudio",
         "--extract-audio",
         "--audio-format", "mp3",
-        "--output", output_filename,
+        "--output", output_path,
         youtube_url
     ]
-    if ffmpeg_path:
-        command.insert(-2, "--ffmpeg-location")
-        command.insert(-2, ffmpeg_path)
 
-    subprocess.run(command, check=True)
-    return output_filename
+    try:
+        result = subprocess.run(
+            command,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        print(result.stdout)
+    except subprocess.CalledProcessError as e:
+        print("\n❌ yt-dlp failed!")
+        print("Command:", ' '.join(command))
+        print("Error Output:\n", e.stderr)
+        raise
+
+    return output_path
 
 def transcribe_audio(file_path, model_size="base"):
     print(f"Loading Whisper model ({model_size})...")
@@ -39,26 +56,29 @@ def summarize_text(text, max_chunk=1000):
     summaries = [summarizer(chunk)[0]['summary_text'] for chunk in chunks]
     return " ".join(summaries)
 
-def process_youtube_video(url, model_size="base", ffmpeg_path=None):
+def process_youtube_video(url, model_size="base", output_folder="outputs"):
     print("\n🔽 Step 1: Downloading audio from YouTube")
-    audio_path = download_audio(url, ffmpeg_path=ffmpeg_path)
+    audio_path = download_audio(url, output_folder=output_folder)
 
     print("\n🧠 Step 2: Transcribing with Whisper")
     transcript = transcribe_audio(audio_path, model_size)
-    
-    with open("transcript.txt", "w", encoding="utf-8") as f:
+
+    transcript_path = os.path.join(output_folder, "transcript.txt")
+    with open(transcript_path, "w", encoding="utf-8") as f:
         f.write(transcript)
 
     print("\n✂️ Step 3: Summarizing transcript")
-    summary = summarize_text(transcript)  
+    summary = summarize_text(transcript)
 
-    with open("summary.txt", "w", encoding="utf-8") as f:
+    summary_path = os.path.join(output_folder, "summary.txt")
+    with open(summary_path, "w", encoding="utf-8") as f:
         f.write(summary)
 
-    print("\n✅ Done! Transcript and summary saved as transcript.txt and summary.txt")
+    print("\n✅ Done! Files saved in:")
+    print("Transcript:", transcript_path)
+    print("Summary:", summary_path)
     return transcript, summary
 
 if __name__ == "__main__":
     url = input("Enter YouTube video URL: ").strip()
-    ffmpeg_dir = "./outputs"  # Optionally set to "C:/ffmpeg/bin" if not in PATH
-    process_youtube_video(url, ffmpeg_path=ffmpeg_dir)
+    process_youtube_video(url, output_folder="outputs")

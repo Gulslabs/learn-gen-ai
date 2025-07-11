@@ -24,4 +24,14 @@ This project allows you to:
 
 ```bash
 git clone https://github.com/yourusername/youtube-summarizer.git
+python -m venv .venv
+.venv\Scripts\activate.ps1
+pip install -r requirements.txt
 cd youtube-summarizer
+python.exe .\outube_summarizer.py
+```
+
+
+
+Sample Url: `https://www.youtube.com/watch?v=LPZh9BOjkQs&t=6s`
+
