@@ -8,6 +8,8 @@ This project allows you to:
 
 ---
 
+
+
 ## 💡 Features
 
 ✅ Automatic download and conversion of YouTube audio  
@@ -15,6 +17,16 @@ This project allows you to:
 ✅ Concise summarization (Transformer-based models)  
 ✅ Easy-to-use Web UI (via Gradio)  
 ✅ 100% Free and local processing — no API keys required
+
+---
+
+---
+
+## ⚙️ Requirements
+
+- Python 3.8+ and Pipe
+- Download [ffmpeg](https://www.gyan.dev/ffmpeg/builds/ffmpeg-release-essentials.zip). Extract it somewhere and add `ffmpeg/bin` folder to your system PATH
+- Internet access (for downloading YouTube videos and model weights)
 
 ---
 
@@ -28,10 +40,7 @@ python -m venv .venv
 .venv\Scripts\activate.ps1
 pip install -r requirements.txt
 cd youtube-summarizer
-python.exe .\outube_summarizer.py
+python.exe .\youtube_summarizer.py
+Enter YouTube video URL: https://www.youtube.com/watch?v=LPZh9BOjkQs&t=6s
 ```
-
-
-
-Sample Url: `https://www.youtube.com/watch?v=LPZh9BOjkQs&t=6s`
 
