@@ -5,7 +5,7 @@ import whisper
 from transformers import pipeline
 import warnings
 import requests
-from pytube import YouTube
+import json
 # Suppress FP16 warning on CPU
 warnings.filterwarnings("ignore", category=UserWarning)
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
@@ -16,10 +16,17 @@ def ensure_output_folder(folder):
 
 def get_tittle_from_url(url):
     try:
-        yt = YouTube(url)
-        return yt.title
+        result = subprocess.run(
+            ["yt-dlp", "--dump-json", url],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True
+        )
+        info = json.loads(result.stdout)
+        return info.get("title", "YouTube Video")
     except Exception as e:
-        print(f"Error fetching title from YouTube: {e}")
+        print(f"Error getting video title from yt-dlp: {e}")
         return "YouTube Video"
 
 def download_audio(youtube_url, output_folder="outputs", output_filename="audio.mp3"):
@@ -119,4 +126,4 @@ def process_youtube_video(url, model_size="base", output_folder="outputs"):
 if __name__ == "__main__":
     url = input("Enter YouTube video URL: ").strip()
     process_youtube_video(url, output_folder="outputs")
-    # print(get_tittle_from_url(url))
+    #print(get_tittle_from_url(url))
