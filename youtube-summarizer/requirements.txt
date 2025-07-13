@@ -7,3 +7,5 @@ yt-dlp
 
 # Optional, in case whisper dependencies require it
 ffmpeg-python
+requests
+pytube

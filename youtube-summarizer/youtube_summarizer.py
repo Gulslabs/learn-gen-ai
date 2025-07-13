@@ -1,16 +1,26 @@
 # youtube_summarizer.py
-
 import os
 import subprocess
 import whisper
 from transformers import pipeline
 import warnings
-
+import requests
+from pytube import YouTube
 # Suppress FP16 warning on CPU
 warnings.filterwarnings("ignore", category=UserWarning)
+OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
+OLLAMA_MODEL = "llama3"
 
 def ensure_output_folder(folder):
     os.makedirs(folder, exist_ok=True)
+
+def get_tittle_from_url(url):
+    try:
+        yt = YouTube(url)
+        return yt.title
+    except Exception as e:
+        print(f"Error fetching title from YouTube: {e}")
+        return "YouTube Video"
 
 def download_audio(youtube_url, output_folder="outputs", output_filename="audio.mp3"):
     print("Using yt-dlp to download audio...")
@@ -40,7 +50,6 @@ def download_audio(youtube_url, output_folder="outputs", output_filename="audio.
         print("Command:", ' '.join(command))
         print("Error Output:\n", e.stderr)
         raise
-
     return output_path
 
 def transcribe_audio(file_path, model_size="base"):
@@ -56,6 +65,34 @@ def summarize_text(text, max_chunk=1000):
     summaries = [summarizer(chunk)[0]['summary_text'] for chunk in chunks]
     return " ".join(summaries)
 
+def summarize_with_ollama(transcript):
+    print("Generating structured markdown summary with LLaMA 3 via Ollama...")
+    prompt = (
+        "Create a clean, structured Markdown summary of the following transcript.\n"
+        "Include a title, overview, key sections as headings with bullet points, specific details worth highlighting,\n"
+        "and a timeline breakdown if you detect one.\n\n"
+        f"Transcript:\n{transcript}"
+    )
+
+    response = requests.post(OLLAMA_ENDPOINT, json={
+        "model": OLLAMA_MODEL,
+        "prompt": prompt,
+        "stream": False
+    })
+    response.raise_for_status()
+    return response.json()["response"]
+
+
+def save_markdown_summary(title, url, markdown_summary, output_folder="outputs"):
+    markdown_path = os.path.join(output_folder, "summary.md")
+    with open(markdown_path, "w", encoding="utf-8") as f:
+        f.write(f"# 📽️ Video Summary: {title}\n\n")
+        f.write(f"**🔗 YouTube Link:** {url}\n\n")
+        f.write("---\n\n")
+        f.write(markdown_summary.strip() + "\n")
+    return markdown_path
+
+
 def process_youtube_video(url, model_size="base", output_folder="outputs"):
     print("\n🔽 Step 1: Downloading audio from YouTube")
     audio_path = download_audio(url, output_folder=output_folder)
@@ -67,18 +104,19 @@ def process_youtube_video(url, model_size="base", output_folder="outputs"):
     with open(transcript_path, "w", encoding="utf-8") as f:
         f.write(transcript)
 
-    print("\n✂️ Step 3: Summarizing transcript")
-    summary = summarize_text(transcript)
+   # print("\n✂️ Step 3: Summarizing transcript")
+    # summary = summarize_text(transcript)
+    
+    print("\n✂️ Step 3: Generating markdown summary")
+    markdown_summary = summarize_with_ollama(transcript)
+    
+    markdown_path = save_markdown_summary(get_tittle_from_url(url), url, markdown_summary, output_folder)
 
-    summary_path = os.path.join(output_folder, "summary.txt")
-    with open(summary_path, "w", encoding="utf-8") as f:
-        f.write(summary)
-
-    print("\n✅ Done! Files saved in:")
-    print("Transcript:", transcript_path)
-    print("Summary:", summary_path)
-    return transcript, summary
+    print("\n✅ Done! Markdown summary saved to:")
+    print("📁", markdown_path)
+    return transcript, markdown_summary
 
 if __name__ == "__main__":
     url = input("Enter YouTube video URL: ").strip()
     process_youtube_video(url, output_folder="outputs")
+    # print(get_tittle_from_url(url))
