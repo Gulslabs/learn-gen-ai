@@ -40,7 +40,7 @@ This project allows you to:
 - During installation, make sure to check **"Add Python to PATH"** option.
 
 
-####  Install pip (if not already installed)
+####  Install pip 
 - Check if pip is already installed:
   ```bash
   pip --version

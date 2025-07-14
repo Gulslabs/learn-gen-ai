@@ -1,5 +1,5 @@
 .venv/
-*/outputs/*
+outputs/
 *.pyc
 .vscode/
 .env
