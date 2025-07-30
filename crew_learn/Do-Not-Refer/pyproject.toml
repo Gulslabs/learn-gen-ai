@@ -1,0 +1,23 @@
+[project]
+name = "crew_with_local_llm"
+version = "0.1.0"
+description = "crew-with-local-llm using crewAI"
+authors = [{ name = "Gulam Ahsan", email = "gulam.ahsan@gmail.com" }]
+requires-python = ">=3.10,<3.13"
+dependencies = [
+    "crewai[tools]>=0.108.0,<1.0.0"
+]
+
+[project.scripts]
+crew_with_local_llm = "crew_with_local_llm.main:run"
+run_crew = "crew_with_local_llm.main:run"
+train = "crew_with_local_llm.main:train"
+replay = "crew_with_local_llm.main:replay"
+test = "crew_with_local_llm.main:test"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.crewai]
+type = "crew"
