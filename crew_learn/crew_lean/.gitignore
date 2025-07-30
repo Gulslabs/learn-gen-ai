@@ -2,5 +2,5 @@
 __pycache__/
 .DS_Store
 report.md
-knowledge/*
-tools/*
+src/crew_lean/knowledge/*
+src/crew_lean/tools/*

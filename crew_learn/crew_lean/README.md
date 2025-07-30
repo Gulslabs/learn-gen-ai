@@ -1,41 +1,31 @@
 # Lean Crew
-Sample project to lean how to use crewAI works with Preplexity
-
-## Understanding Your Crew
-
-The `crew_lean` is composed of multiple AI agents, each with unique roles, goals, and tools. These agents collaborate on a series of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to achieve complex objectives. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew.
+Sample project to lean how to use crewAI works with Preplexity. 
+This `crew_lean` is a base project that demonstrate the use of multi-agents to acheive specific goal. Each agent has unique roles, goals, and tools. The `config/agents.yaml` file outlines the capabilities and configurations of each agent in your crew(**agents are stitched with preplexity models**). The agents collaborate on a couple of tasks, defined in `config/tasks.yaml`, leveraging their collective skills to generate research summary on any given topic(_main.py_)
 
 ## Installation
 
 ```bash
 Step 1: pip install uv
 Step 2: crewai install
+Step 3: git clone https://github.com/Gulslabs/learn-gen-ai.git
+Step 4: cd crew_learn/crew_lean
+Step 5: crewai run # This will run the crew_lean crew
 ```
+**IMP:** This command initializes the crew_lean Crew, assembling the agents and assigning them tasks as defined in your configuration. `report.md` file will be generated with the output of a research on LLMs in the root folder.
 
-
-### Customizing
-
-**Add your `PERPLEXITY_API_KEY` into the `.env` file**
-
+## Customization
 - Modify `src/crew_lean/config/agents.yaml` to define your agents
 - Modify `src/crew_lean/config/tasks.yaml` to define your tasks
 - Modify `src/crew_lean/crew.py` to add your own logic, tools and specific args
 - Modify `src/crew_lean/main.py` to add custom inputs for your agents and tasks
 
-## Running the Project
+## Reference - How to setup perplexity locally
+-  With a Perplexity Pro subscription(_available for free for airtel users in India_), you can interact programmatically with Perplexity's models using their official API in your Python projects.
+    - Log into Perplexity[https://www.perplexity.ai/account/api/keys]
+    - Goto `Settings → API` geneate and copy the API key. 
+    - Set variable  `PERPLEXITY_API_KEY` with value of the copied api key into the `.env` file Or set it as a environment variable. 
 
-To kickstart your crew of AI agents and begin task execution, run this from the root folder of your project:
-
-```bash
-$ crewai run
-```
-
-This command initializes the crew_lean Crew, assembling the agents and assigning them tasks as defined in your configuration. `report.md` file will be generated with the output of a research on LLMs in the root folder.
-
-
-This example, unmodified, will run the create a
-
-## Bonus - What are tooling and how they work 
+## What are tooling and how they work 
 - CrewAI custom tools are essentially functions that extend what your AI agents can do beyond just generating text. Think of them as specialized abilities you give to your agents - like giving a human assistant access to a calculator, database, or API. Tools are assigned to agents through the tools parameter, and agents automatically decide when and how to use them based on the task requirements.
 - There are two main ways to create custom tools in CrewAI:
     - Using the @tool decorator (simpler, more common)
