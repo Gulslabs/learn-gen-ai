@@ -9,7 +9,8 @@ Step 1: pip install uv
 Step 2: crewai install
 Step 3: git clone https://github.com/Gulslabs/learn-gen-ai.git
 Step 4: cd crew_learn/crew_lean
-Step 5: crewai run # This will run the crew_lean crew
+Step 5: rm -r uv.lock
+Step 6: crewai run # This will run the crew_lean crew
 ```
 **IMP:** This command initializes the crew_lean Crew, assembling the agents and assigning them tasks as defined in your configuration. `report.md` file will be generated with the output of a research on LLMs in the root folder.
 

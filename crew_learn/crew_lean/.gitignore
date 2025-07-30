@@ -4,3 +4,4 @@ __pycache__/
 report.md
 src/crew_lean/knowledge/*
 src/crew_lean/tools/*
+uv.lock
