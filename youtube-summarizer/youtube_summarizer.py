@@ -6,10 +6,14 @@ from transformers import pipeline
 import warnings
 import requests
 import json
+from openai import OpenAI
+
 # Suppress FP16 warning on CPU
 warnings.filterwarnings("ignore", category=UserWarning)
 OLLAMA_ENDPOINT = "http://localhost:11434/api/generate"
 OLLAMA_MODEL = "llama3"
+PERPLIXITY_ENDPOINT = "https://api.perplexity.ai"
+api_key = os.getenv("PERPLEXITY_API_KEY"); 
 
 def ensure_output_folder(folder):
     os.makedirs(folder, exist_ok=True)
@@ -80,7 +84,7 @@ def summarize_with_ollama(transcript):
         "and a timeline breakdown if you detect one.\n\n"
         f"Transcript:\n{transcript}"
     )
-
+    
     response = requests.post(OLLAMA_ENDPOINT, json={
         "model": OLLAMA_MODEL,
         "prompt": prompt,
@@ -88,6 +92,17 @@ def summarize_with_ollama(transcript):
     })
     response.raise_for_status()
     return response.json()["response"]
+def summarize_with_perplexity(transcript):
+    print("Generating structured markdown summary with Perplexity AI...")
+    prompt = (
+        "Create a clean, structured Markdown summary of the following transcript.\n"
+        "Include a title, overview, key sections as headings with bullet points, specific details worth highlighting,\n"
+        "and a timeline breakdown if you detect one.\n\n"
+        f"Transcript:\n{transcript}"
+    )
+    client = OpenAI(api_key, base_url=PERPLIXITY_ENDPOINT)
+    
+
 
 
 def save_markdown_summary(title, url, markdown_summary, output_folder="outputs"):
