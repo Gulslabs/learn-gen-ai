@@ -36,16 +36,6 @@ gcloud --version
 
 You should see output showing the SDK version.
 
-#### For macOS:
-```bash
-# Using Homebrew
-brew install --cask google-cloud-sdk
-
-# Or using the installer
-curl https://sdk.cloud.google.com | bash
-exec -l $SHELL
-```
-
 #### For Linux:
 ```bash
 # Add the Cloud SDK distribution URI as a package source
@@ -66,11 +56,12 @@ sudo apt-get update && sudo apt-get install google-cloud-cli
 gcloud init
 ```
 
+
 Follow the prompts to:
 1. Login to your Google account (browser will open)
-2. Select or create a Google Cloud project with id "osrprocessor20251029"
+2. Select or create a Google Cloud project set PROJECT_ID TO `osrprocessor20251029`
 
-**Note for Windows users:** If you see any errors, try running as Administrator or use the "Cloud SDK Shell" that was installed with the SDK.
+**Windows:** If you see any errors, try running as Administrator or use the "Cloud SDK Shell" that was installed with the SDK.
 
 ### 3. List Projects
 1. Ensure you see the project created in step 2. 
@@ -113,8 +104,7 @@ gcloud iam service-accounts list
 ```
 
 ### 7. Grant Necessary Permissions to Service Account
-
-**For Development/Testing (Broader Access):**
+**For Development/Testing (Broader Access of `ml.admin` is provided):**
 
 ```bash
 # Get your project ID
@@ -136,30 +126,27 @@ gcloud projects get-iam-policy $PROJECT_ID \
 # Create a key for the service account and download as JSON
 gcloud iam service-accounts keys create credentials.json \
     --iam-account=sa-ocr-processor@${PROJECT_ID}.iam.gserviceaccount.com
-
 # This will create a 'credentials.json' file in your current directory
 ```
 
 ### 9. Set Environment Variable for Authentication
-Run this step in our vs-code editor console
-#### For Windows (Command Prompt):
-```cmd
-set GOOGLE_APPLICATION_CREDENTIALS=%CD%\credentials.json
-
-# Or To set it permenantly
-setx GOOGLE_APPLICATION_CREDENTIALS "%CD%\credentials.json"
-```
+Run this step in  vscode editor console
 #### For Windows (PowerShell):
 ```cmd
 $env:GOOGLE_APPLICATION_CREDENTIALS="$PWD\credentials.json"
 # Or To set it permenantly
 [System.Environment]::SetEnvironmentVariable('GOOGLE_APPLICATION_CREDENTIALS', "$PWD\credentials.json", 'User')
 ```
-
 ### 10. Google Billing: 
 
-You need to enable billing on your Google Cloud project. Don't worry - you won't be charged if you stay within the free tier, and new accounts get $300 in free credits. Then run 
+You need to enable billing on your Google Cloud project to use `Google Vision APIs`. Don't worry - you won't be charged if you stay within the free tier, and new accounts also get $300 in free credits. 
+- Goto https://console.cloud.google.com/billing
+- Enter your payment information (credit/debit card)
+- Google will verify with a small temporary charge (refunded immediately)
+
+
 ```
+bash
 # List available billing accounts
 gcloud billing accounts list
 
@@ -172,7 +159,7 @@ gcloud billing projects link PROJECT_ID \
 
 ```bash
 # Create a virtual environment (recommended)
-python -m venv venv
+python -m venv .venv
 
 # Activate the virtual environment
 # On Windows:
@@ -186,8 +173,7 @@ pip install -r requirements.txt
 ## Usage
 
 ### 1. Prepare Your Images
-
-Create an `images` directory then copy all your handwritten images here. 
+Copy into  `images` directory all your handwritten images here. 
 ```bash
 mkdir images
 ```
