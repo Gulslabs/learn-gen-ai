@@ -1,0 +1,20 @@
+langchain-google-genai
+# Core requirements
+langchain-community>=0.0.20
+langchain-openai>=0.0.8
+torch
+# Hugging Face integration
+huggingface_hub>=0.19.0
+transformers>=4.40.0
+
+# DeepSeek API support
+requests>=2.31.0
+langchain
+langchain-core
+langchain-text-splitters
+langchain-perplexity
+pandas
+langchain_experimental
+langchain-neo4j
+langchain_huggingface
+sentence-transformers
